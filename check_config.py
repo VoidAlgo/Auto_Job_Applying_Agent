@@ -35,11 +35,11 @@ def check_api_keys():
     load_dotenv()
     
     required_keys = {
-        "ANTHROPIC_API_KEY": "Anthropic (Claude)",
-        "OPENAI_API_KEY": "OpenAI (Embeddings)",
+        "GOOGLE_API_KEY": "Google Gemini (Cover Letters)",
     }
     
     optional_keys = {
+        "GEMINI_API_KEY": "Alternative Gemini Key",
         "GITHUB_TOKEN": "GitHub API",
         "LINKEDIN_EMAIL": "LinkedIn",
         "PINECONE_API_KEY": "Pinecone",
@@ -50,7 +50,7 @@ def check_api_keys():
     logger.info("\nRequired API Keys:")
     for key, name in required_keys.items():
         value = os.getenv(key)
-        if value and value != f"your_{key.lower()}_here":
+        if value and value != f"your_{key.lower()}_here" and len(value) > 10:
             logger.info(f"✓ {name}: Set")
         else:
             logger.error(f"✗ {name}: Not set")
@@ -59,10 +59,12 @@ def check_api_keys():
     logger.info("\nOptional API Keys:")
     for key, name in optional_keys.items():
         value = os.getenv(key)
-        if value and value != f"your_{key.lower()}_here":
+        if value and value != f"your_{key.lower()}_here" and len(value) > 10:
             logger.info(f"✓ {name}: Set")
         else:
             logger.warning(f"○ {name}: Not set (optional)")
+    
+    logger.info("\nNote: Using sentence-transformers for embeddings (free, local, no API key needed)")
     
     return all_good
 
