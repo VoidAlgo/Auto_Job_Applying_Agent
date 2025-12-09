@@ -1,0 +1,102 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Data
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Documents (sensitive)
+docs/resume.pdf
+docs/certifications/
+
+# Debug
+debug/
+*.html
+
+# Selenium
+chromedriver
+geckodriver
+*.crx
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Embeddings
+*.npz
+*.pkl
+*.pickle
+
+# FAISS Index
+*.index
+*.json
+
+# Scraped Data
+scraped_jobs/
+applications/
+
+# Temporary
+temp/
+tmp/
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project Specific
+candidate_profile.json
+*_kb.json
+*_kb.index
+*.embeddings.npz

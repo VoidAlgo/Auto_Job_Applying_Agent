@@ -1,0 +1,157 @@
+# Personal Information
+personal:
+  name: "Makilesh M"
+  email: "makilesh24225@gmail.com"
+  phone: "+919894419452"
+  location: "Coimbatore, India"
+  
+# Professional Links
+links:
+  github: "https://github.com/Makilesh"
+  linkedin: "https://www.linkedin.com/in/makilesh/"
+  leetcode: "https://leetcode.com/yourprofile"  # Update with your LeetCode profile
+  portfolio: ""  # Optional: Add portfolio website if available
+
+# Documents
+documents:
+  resume: "./docs/resume.pdf"
+  projects_folder: "./projects/"
+  certifications_folder: "./docs/certifications/"
+
+# Target Roles
+target_roles:
+  primary:
+    - "AI Engineer"
+    - "ML Engineer"
+    - "LLM Engineer"
+    - "GenAI Engineer"
+  
+  secondary:
+    - "AI Developer"
+    - "Machine Learning Engineer"
+    - "Applied AI Scientist"
+    - "NLP Engineer"
+    - "MLOps Engineer"
+
+# Preferences
+preferences:
+  work_type:
+    - "Remote"
+    - "Hybrid"
+    - "On-site"
+  
+  locations:
+    primary:
+      - "Remote"
+      - "Bangalore"
+      - "Coimbatore"
+    
+    secondary:
+      - "Chennai"
+      - "Hyderabad"
+      - "Pune"
+  
+  company_size:
+    - "Startup"
+    - "Mid-size"
+    - "Enterprise"
+  
+  company_stage:
+    - "Early Stage"
+    - "Growth Stage"
+    - "Established"
+  
+  salary_expectations:
+    min: 400000  # 4 LPA (in INR)
+    max: 800000  # 8 LPA (in INR)
+    currency: "INR"
+    negotiable: true
+
+# Skills (Auto-extracted from resume and GitHub, but can be manually adjusted)
+skills:
+  # Will be populated by profile_builder.py
+  core_programming: []
+  ml_frameworks: []
+  llm_tools: []
+  databases: []
+  cloud_platforms: []
+  soft_skills: []
+
+# Key Projects (References - detailed descriptions in projects/ folder)
+key_projects:
+  - name: "AI Voice Agent"
+    file: "voice_agent.md"
+    priority: 1
+    tags: ["LLM", "Voice AI", "Real-time", "Production"]
+  
+  - name: "Meeting Minutes Assistant"
+    file: "meeting_assistant.md"
+    priority: 2
+    tags: ["NLP", "Summarization", "RAG", "Enterprise"]
+  
+  # Add more projects here
+
+# Experience Summary (Auto-populated but can be refined)
+experience:
+  total_years: 0
+  internships:
+    count: 1  # Update with actual count
+    companies: []  # Will be auto-filled
+  
+  key_achievements:
+    - "Sub-200ms latency in real-time voice AI system"
+    - "95% accuracy in sentiment analysis"
+    - "80% reduction in meeting documentation time"
+    # Add more achievements
+
+# Certifications
+certifications:
+  - name: "Oracle Cloud Infrastructure 2024 Generative AI Certified Professional"
+    issuer: "Oracle"
+    date: "2024"
+    credential_id: ""
+  
+  # Add more certifications
+
+# Education
+education:
+  degree: "Bachelor of Technology"
+  major: "Computer Science and Engineering / AI & ML"
+  institution: "Sri Krishna College of Engineering and Technology"
+  location: "Coimbatore, India"
+  graduation_year: 2025
+  gpa: ""  # Optional
+
+# Availability
+availability:
+  start_date: "Immediate"  # or specific date
+  notice_period: "0 days"
+  willing_to_relocate: true
+  visa_required: false
+
+# Additional Preferences
+additional:
+  preferred_tech_stack:
+    - "Python"
+    - "PyTorch"
+    - "LangChain"
+    - "LLMs (GPT, Claude)"
+    - "Vector Databases"
+    - "FastAPI"
+  
+  interested_domains:
+    - "Generative AI"
+    - "Voice AI"
+    - "RAG Systems"
+    - "Multi-agent Systems"
+    - "MLOps"
+  
+  avoid_domains:
+    - "Data Entry"
+    - "Pure Backend (non-AI)"
+  
+  learning_goals:
+    - "Advanced LLM architectures"
+    - "Production ML systems"
+    - "AI Safety and Alignment"
+    - "Distributed training"

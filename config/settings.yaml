@@ -1,0 +1,239 @@
+# Application Settings
+application:
+  max_applications_per_day: 15
+  match_score_threshold: 70
+  auto_approve_threshold: 90
+  manual_review_count: 20
+  rate_limit_delay: 300  # 5 minutes between applications
+
+# Target Job Criteria
+job_criteria:
+  target_roles:
+    - "AI Engineer"
+    - "Machine Learning Engineer"
+    - "ML Engineer"
+    - "LLM Engineer"
+    - "AI Developer"
+    - "GenAI Engineer"
+    - "Applied AI Scientist"
+    - "NLP Engineer"
+    - "MLOps Engineer"
+    
+  experience_levels:
+    - "Entry Level"
+    - "Junior"
+    - "0-1 years"
+    - "0-2 years"
+    - "Fresh Graduate"
+    - "Internship to FTE"
+    - "New Grad"
+    
+  keywords:
+    required:
+      - "LLM"
+      - "Machine Learning"
+      - "Deep Learning"
+      - "AI"
+      - "NLP"
+      - "PyTorch"
+      - "TensorFlow"
+    
+    preferred:
+      - "RAG"
+      - "LangChain"
+      - "Generative AI"
+      - "Voice AI"
+      - "GPT"
+      - "Vector Database"
+      - "Embeddings"
+      - "Transformers"
+      - "Hugging Face"
+    
+    boost_keywords:
+      - "fresh graduate"
+      - "entry level"
+      - "junior"
+      - "new grad"
+      - "recent graduate"
+  
+  locations:
+    - "Remote"
+    - "Bangalore"
+    - "Coimbatore"
+    - "Hybrid"
+    - "Chennai"
+    - "Hyderabad"
+    - "Pune"
+  
+  excluded_keywords:
+    - "5+ years"
+    - "Senior"
+    - "Lead"
+    - "Principal"
+    - "Staff"
+    - "PhD required"
+    - "extensive experience"
+
+# Matching Engine Weights
+matching:
+  weights:
+    technical_skills: 0.40
+    project_relevance: 0.30
+    experience_level: 0.20
+    company_culture: 0.10
+  
+  skill_categories:
+    core_ml:
+      - "Python"
+      - "PyTorch"
+      - "TensorFlow"
+      - "scikit-learn"
+      - "Machine Learning"
+      - "Deep Learning"
+    
+    llm_genai:
+      - "LLM"
+      - "GPT"
+      - "Claude"
+      - "LangChain"
+      - "RAG"
+      - "Prompt Engineering"
+      - "Generative AI"
+    
+    nlp:
+      - "NLP"
+      - "Transformers"
+      - "Hugging Face"
+      - "BERT"
+      - "spaCy"
+      - "Text Processing"
+    
+    mlops:
+      - "Docker"
+      - "Kubernetes"
+      - "MLOps"
+      - "CI/CD"
+      - "AWS"
+      - "Azure"
+    
+    data:
+      - "SQL"
+      - "Vector Database"
+      - "Pinecone"
+      - "FAISS"
+      - "Data Processing"
+
+# Job Board Configuration
+job_boards:
+  linkedin:
+    enabled: true
+    base_url: "https://www.linkedin.com/jobs/search"
+    filters:
+      job_type: ["Full-time", "Contract", "Internship"]
+      experience_level: ["Entry level", "Associate"]
+      remote: ["Remote", "Hybrid"]
+    max_results_per_search: 100
+  
+  indeed:
+    enabled: true
+    base_url: "https://www.indeed.com/jobs"
+    filters:
+      job_type: ["fulltime", "contract"]
+      experience_level: ["entry_level"]
+    max_results_per_search: 50
+  
+  glassdoor:
+    enabled: true
+    base_url: "https://www.glassdoor.com/Job/jobs.htm"
+    max_results_per_search: 50
+  
+  angellist:
+    enabled: true
+    base_url: "https://wellfound.com/jobs"
+    filters:
+      job_type: ["full-time"]
+      experience: ["0-2 years"]
+    max_results_per_search: 50
+
+# Web Scraping Configuration
+scraping:
+  user_agents:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  
+  delays:
+    min: 2
+    max: 5
+    between_pages: 10
+  
+  retry:
+    max_attempts: 3
+    backoff_factor: 2
+  
+  timeout: 30
+  
+  stealth_mode:
+    enabled: true
+    headless: true
+    disable_images: true
+    disable_javascript: false
+
+# LLM Configuration
+llm:
+  provider: "anthropic"  # anthropic, openai
+  model: "claude-sonnet-4.5"
+  temperature: 0.7
+  max_tokens: 2000
+  
+  embeddings:
+    provider: "openai"  # openai, sentence-transformers
+    model: "text-embedding-3-small"
+    dimension: 1536
+
+# Database Configuration
+database:
+  type: "sqlite"  # postgresql, sqlite
+  sqlite_path: "./data/job_agent.db"
+  pool_size: 10
+  max_overflow: 20
+
+# Follow-up Settings
+follow_up:
+  enabled: true
+  schedules:
+    - days_after: 7
+      message_template: "thank_you"
+    - days_after: 14
+      message_template: "status_inquiry"
+  
+  max_follow_ups: 2
+
+# Document Customization
+customization:
+  cover_letter:
+    min_words: 250
+    max_words: 350
+    tone: "professional_enthusiastic"
+    include_github: true
+    include_projects: 2
+  
+  resume:
+    format: "pdf"
+    customize_per_job: true
+    keyword_optimization: true
+    max_versions: 5
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/job_agent.log"
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+  
+  components:
+    scraper: "DEBUG"
+    matcher: "INFO"
+    customization: "INFO"
+    application: "INFO"
