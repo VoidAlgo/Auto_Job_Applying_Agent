@@ -2,13 +2,15 @@
 Cover Letter Agent - AI-Powered Cover Letter Generation
 
 This module generates personalized, professional cover letters for each job
-application using Claude Sonnet 4.5 with careful prompting for freshers.
+application using Google Gemini 2.5 Flash (primary) with Ollama Llama 3.1 as backup.
 
 Author: Auto Job Applier System
 Date: December 2025
 """
 
-import anthropic
+import google.generativeai as genai
+import requests
+import json
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 from pathlib import Path
@@ -71,7 +73,8 @@ class CoverLetter:
 
 class CoverLetterAgent:
     """
-    Generate personalized cover letters using Claude Sonnet 4.5.
+    Generate personalized cover letters using Google Gemini 2.5 Flash (primary)
+    with Ollama Llama 3.1 as backup.
     
     Specializes in fresh graduate positioning:
     - Emphasizes learning ability and growth mindset
@@ -81,40 +84,70 @@ class CoverLetterAgent:
     - Length: 250-350 words (one page)
     """
     
-    # Claude models
-    CLAUDE_SONNET_4_5 = "claude-sonnet-4-20250514"
-    CLAUDE_SONNET_3_5 = "claude-3-5-sonnet-20241022"
+    # Model configurations
+    GEMINI_MODEL = "gemini-2.0-flash-exp"
+    OLLAMA_MODEL = "llama3.1"
+    OLLAMA_BASE_URL = "http://localhost:11434"
     
     def __init__(
         self,
         knowledge_base: Optional[KnowledgeBase] = None,
-        model: str = CLAUDE_SONNET_4_5,
-        temperature: float = 0.7
+        temperature: float = 0.7,
+        use_ollama: bool = False
     ):
         """
         Initialize the cover letter agent.
         
         Args:
             knowledge_base: KnowledgeBase for retrieving relevant projects
-            model: Claude model to use
             temperature: Generation temperature (0-1)
+            use_ollama: Force use of Ollama instead of Gemini
         """
         self.logger = logger
         self.config = get_config()
-        
-        # Initialize Anthropic client
-        api_key = os.getenv('ANTHROPIC_API_KEY')
-        if not api_key:
-            raise ValueError("ANTHROPIC_API_KEY not found in environment")
-        
-        self.client = anthropic.Anthropic(api_key=api_key)
-        self.model = model
         self.temperature = temperature
-        
-        # Knowledge base for RAG
         self.knowledge_base = knowledge_base
+        self.use_ollama = use_ollama
         
-        self.logger.info(f"CoverLetterAgent initialized with model: {model}")
+        # Set Ollama model directory
+        os.environ['OLLAMA_MODELS'] = 'D:\\ollama_models'
+        
+        # Initialize primary model (Gemini)
+        self.gemini_client = None
+        if not use_ollama:
+            try:
+                api_key = os.getenv('GOOGLE_API_KEY') or os.getenv('GEMINI_API_KEY')
+                if api_key:
+                    genai.configure(api_key=api_key)
+                    self.gemini_client = genai.GenerativeModel(self.GEMINI_MODEL)
+                    self.logger.info(f"Gemini initialized: {self.GEMINI_MODEL}")
+                else:
+                    self.logger.warning("GOOGLE_API_KEY not found, will use Ollama as fallback")
+                    self.use_ollama = True
+            except Exception as e:
+                self.logger.error(f"Failed to initialize Gemini: {e}")
+                self.logger.info("Falling back to Ollama Llama 3.1")
+                self.use_ollama = True
+        
+        # Verify Ollama availability
+        if self.use_ollama or not self.gemini_client:
+            if not self._check_ollama_available():
+                raise ValueError(
+                    "Neither Gemini nor Ollama are available. "
+                    "Please set GOOGLE_API_KEY or ensure Ollama is running."
+                )
+            self.logger.info(f"Using Ollama Llama 3.1 from {os.environ['OLLAMA_MODELS']}")
+    
+    def _check_ollama_available(self) -> bool:
+        """Check if Ollama is running and accessible."""
+        try:
+            response = requests.get(f"{self.OLLAMA_BASE_URL}/api/tags", timeout=5)
+            if response.status_code == 200:
+                self.logger.info("Ollama is available")
+                return True
+        except Exception as e:
+            self.logger.error(f"Ollama not available: {e}")
+        return False
     
     def generate(
         self,
@@ -143,28 +176,86 @@ class CoverLetterAgent:
         # Build prompt
         prompt = self._build_prompt(job, profile, match_score, relevant_projects)
         
-        # Generate with Claude
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=2000,
-            temperature=self.temperature,
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-        )
+        # Generate with Gemini (primary) or Ollama (backup)
+        content = None
+        prompt_tokens = 0
+        completion_tokens = 0
+        model_used = ""
         
-        # Extract content
-        content = response.content[0].text
+        if self.gemini_client and not self.use_ollama:
+            try:
+                self.logger.info("Generating with Gemini 2.5 Flash...")
+                response = self.gemini_client.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(
+                        temperature=self.temperature,
+                        max_output_tokens=2000,
+                    )
+                )
+                content = response.text
+                model_used = self.GEMINI_MODEL
+                
+                # Estimate tokens (Gemini doesn't provide exact counts in all cases)
+                prompt_tokens = len(prompt.split()) * 1.3  # Rough estimate
+                completion_tokens = len(content.split()) * 1.3
+                
+                self.logger.info("Successfully generated with Gemini")
+                
+            except Exception as e:
+                self.logger.error(f"Gemini generation failed: {e}")
+                self.logger.info("Falling back to Ollama...")
+                self.use_ollama = True
+        
+        # Fallback to Ollama if Gemini failed or use_ollama is True
+        if not content:
+            try:
+                self.logger.info("Generating with Ollama Llama 3.1...")
+                response = requests.post(
+                    f"{self.OLLAMA_BASE_URL}/api/generate",
+                    json={
+                        "model": self.OLLAMA_MODEL,
+                        "prompt": prompt,
+                        "stream": False,
+                        "options": {
+                            "temperature": self.temperature,
+                            "num_predict": 2000,
+                        }
+                    },
+                    timeout=120
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    content = result.get('response', '')
+                    model_used = self.OLLAMA_MODEL
+                    
+                    # Get actual token counts from Ollama
+                    prompt_tokens = result.get('prompt_eval_count', 0)
+                    completion_tokens = result.get('eval_count', 0)
+                    
+                    self.logger.info("Successfully generated with Ollama")
+                else:
+                    raise Exception(f"Ollama returned status {response.status_code}")
+                    
+            except Exception as e:
+                self.logger.error(f"Ollama generation failed: {e}")
+                raise Exception(
+                    "Both Gemini and Ollama failed to generate cover letter. "
+                    f"Gemini error: {e}"
+                )
+        
+        if not content:
+            raise Exception("Failed to generate cover letter with any model")
+        if not content:
+            raise Exception("Failed to generate cover letter with any model")
         
         # Parse and structure
         cover_letter = self._parse_response(
             content,
             job,
-            response.usage.input_tokens,
-            response.usage.output_tokens
+            int(prompt_tokens),
+            int(completion_tokens),
+            model_used
         )
         
         self.logger.info(
@@ -304,9 +395,10 @@ Do NOT include explanations or meta-commentary - just the cover letter content."
         content: str,
         job: Dict[str, Any],
         prompt_tokens: int,
-        completion_tokens: int
+        completion_tokens: int,
+        model_used: str = \"unknown\"
     ) -> CoverLetter:
-        """Parse Claude's response into CoverLetter object."""
+        """Parse AI model response into CoverLetter object."""
         
         # Calculate word count
         word_count = len(content.split())
@@ -345,7 +437,7 @@ Do NOT include explanations or meta-commentary - just the cover letter content."
             key_projects=key_projects,
             key_skills=key_skills,
             achievements=achievements,
-            model=self.model,
+            model=model_used,
             temperature=self.temperature,
             prompt_tokens=prompt_tokens,
             completion_tokens=completion_tokens,

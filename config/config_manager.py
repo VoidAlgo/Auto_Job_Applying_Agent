@@ -128,6 +128,8 @@ class Config:
         """Load environment variables."""
         return {
             # API Keys
+            "GOOGLE_API_KEY": os.getenv("GOOGLE_API_KEY", ""),
+            "GEMINI_API_KEY": os.getenv("GEMINI_API_KEY", ""),
             "ANTHROPIC_API_KEY": os.getenv("ANTHROPIC_API_KEY", ""),
             "OPENAI_API_KEY": os.getenv("OPENAI_API_KEY", ""),
             "PINECONE_API_KEY": os.getenv("PINECONE_API_KEY", ""),
@@ -166,7 +168,10 @@ class Config:
     def _get_llm_api_key(self) -> str:
         """Get appropriate API key based on LLM provider."""
         provider = self.settings.llm["provider"].lower()
-        if provider == "anthropic":
+        if provider == "gemini":
+            # Try both GOOGLE_API_KEY and GEMINI_API_KEY
+            return self.env["GOOGLE_API_KEY"] or self.env["GEMINI_API_KEY"]
+        elif provider == "anthropic":
             return self.env["ANTHROPIC_API_KEY"]
         elif provider == "openai":
             return self.env["OPENAI_API_KEY"]
@@ -175,12 +180,20 @@ class Config:
     
     def get_embeddings_config(self) -> Dict[str, Any]:
         """Get embeddings configuration."""
-        return {
-            "provider": self.settings.llm["embeddings"]["provider"],
+        provider = self.settings.llm["embeddings"]["provider"]
+        config = {
+            "provider": provider,
             "model": self.settings.llm["embeddings"]["model"],
             "dimension": self.settings.llm["embeddings"]["dimension"],
-            "api_key": self.env["OPENAI_API_KEY"],
         }
+        
+        # Only add API key for OpenAI embeddings
+        if provider == "openai":
+            config["api_key"] = self.env["OPENAI_API_KEY"]
+        else:
+            config["api_key"] = None
+        
+        return config
     
     def get_database_url(self) -> str:
         """Get database connection URL."""
@@ -213,12 +226,17 @@ class Config:
         errors = []
         
         # Check API keys
+        if self.settings.llm["provider"] == "gemini":
+            if not self.env["GOOGLE_API_KEY"] and not self.env["GEMINI_API_KEY"]:
+                errors.append("GOOGLE_API_KEY or GEMINI_API_KEY not set")
+        
         if self.settings.llm["provider"] == "anthropic" and not self.env["ANTHROPIC_API_KEY"]:
             errors.append("ANTHROPIC_API_KEY not set")
         
         if self.settings.llm["provider"] == "openai" and not self.env["OPENAI_API_KEY"]:
             errors.append("OPENAI_API_KEY not set")
         
+        # Only check OpenAI key if using OpenAI embeddings
         if self.settings.llm["embeddings"]["provider"] == "openai" and not self.env["OPENAI_API_KEY"]:
             errors.append("OPENAI_API_KEY required for embeddings")
         

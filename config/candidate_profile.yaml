@@ -22,15 +22,16 @@ documents:
 target_roles:
   primary:
     - "AI Engineer"
-    - "ML Engineer"
     - "LLM Engineer"
+    - "AI Developer"
     - "GenAI Engineer"
   
   secondary:
-    - "AI Developer"
+    # - "AI Developer"
     - "Machine Learning Engineer"
     - "Applied AI Scientist"
     - "NLP Engineer"
+    - ML Engineer"
     - "MLOps Engineer"
 
 # Preferences
@@ -42,14 +43,17 @@ preferences:
   
   locations:
     primary:
-      - "Remote"
       - "Bangalore"
-      - "Coimbatore"
-    
-    secondary:
       - "Chennai"
       - "Hyderabad"
+      - "Coimbatore"
+      - "kochi"
+      - "Remote"
+    
+    secondary:
+      - "Mumbai"
       - "Pune"
+
   
   company_size:
     - "Startup"
@@ -63,7 +67,7 @@ preferences:
   
   salary_expectations:
     min: 400000  # 4 LPA (in INR)
-    max: 800000  # 8 LPA (in INR)
+    max: 10000000  # 8 LPA (in INR)
     currency: "INR"
     negotiable: true
 
@@ -84,10 +88,10 @@ key_projects:
     priority: 1
     tags: ["LLM", "Voice AI", "Real-time", "Production"]
   
-  - name: "Meeting Minutes Assistant"
-    file: "meeting_assistant.md"
-    priority: 2
-    tags: ["NLP", "Summarization", "RAG", "Enterprise"]
+  # - name: "Meeting Minutes Assistant"
+  #   file: "meeting_assistant.md"
+  #   priority: 2
+  #   tags: ["NLP", "Summarization", "RAG", "Enterprise"]
   
   # Add more projects here
 
