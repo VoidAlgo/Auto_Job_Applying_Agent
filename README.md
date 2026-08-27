@@ -10,8 +10,8 @@ This system automates the entire job application process:
 - **Intelligent Matching**: Uses semantic embeddings to match your skills with job requirements
 - **Smart Customization**: Generates tailored cover letters and customizes resumes for each application
 - **Automated Submission**: Fills out applications automatically with human-in-the-loop review
-- **Tracking & Follow-up**: Manages applications and sends automated follow-ups
-
+- **Tracking & Follow-up**: Manages applications and sends automated follow-upsa
+aaaaaa
 ## ✨ Key Features
 
 ### Candidate Profile Analyzer ✅ COMPLETE
