@@ -1,6 +1,8 @@
 # Automated Job Application Agent
 
-An intelligent, automated system for discovering and applying to AI/ML Engineer positions tailored for fresh graduates with strong internship experience.
+An intelligent, automated system for discovering and applying to AI/ML Engineer positions tailored for fresh graduates with strong internship experience
+
+
 
 ## 🎯 Overview
 
@@ -371,3 +373,6 @@ For issues or questions:
 **Built with ❤️ for fresh AI/ML graduates by Makilesh M**
 
 *Good luck with your job search! 🚀*
+
+
+#but not enough-fatbat
